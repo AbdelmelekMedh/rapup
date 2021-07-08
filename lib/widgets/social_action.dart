@@ -32,7 +32,7 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("SocialAction 1");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.locationArrow, title: '', isShare: true),
+              child: getSocialAction(icon: FontAwesomeIcons.mapMarkerAlt, title: '', isShare: true),
             ),
             SizedBox(height: MediaQuery.of(context).size.height - 750),//10
             FloatingActionButton(
@@ -52,7 +52,7 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("socialAction 3");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.solidComment, title: '1.6M'),
+              child: getSocialAction(icon: FontAwesomeIcons.solidCommentAlt, title: '1.6M'),
             ),
             SizedBox(height: MediaQuery.of(context).size.height - 750),//10
             FloatingActionButton(
@@ -72,7 +72,7 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("SocialAction 5");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.share, title: '', isShare: true),
+              child: getSocialAction(icon: FontAwesomeIcons.shareAlt, title: '', isShare: true),
             ),
           ]
       ),
