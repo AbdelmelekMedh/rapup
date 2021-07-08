@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rapup/Start_Screen.dart';
-import 'package:rapup/home.dart';
-import 'package:rapup/sign_in.dart';
-import 'package:rapup/sign_up.dart';
+import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/Start_Screen.dart';
+import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/home.dart';
+import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/sign_in.dart';
+import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/sign_up.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

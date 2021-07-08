@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/user.dart';
+import 'package:http/http.dart' as http;
 
 class SignIn extends StatefulWidget {
   @override
@@ -8,10 +13,23 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+
+  User user = User("","",DateTime.now(),"");
+
+  Future save() async {
+    var res = await http.post("http://localhost:8080/???",
+        headers: {'Context-Type':'application/json'},
+        body: json.encode({'email': user.email, 'password': user.password}));
+    print(res.body);
+    if (res.body != null) {
+      Navigator.of(context).pushNamed('/home');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.red,
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: BackButton(),
@@ -36,6 +54,7 @@ class _SignInState extends State<SignIn> {
             ),
           ),
           Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
             body: Column(
               children: [
@@ -44,38 +63,45 @@ class _SignInState extends State<SignIn> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: 100),
+                        SizedBox(height: MediaQuery.of(context).size.height - 655),//100
                         Center(
                           child: Text('Log In',
                             style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: 80),
+                        SizedBox(height:MediaQuery.of(context).size.height - 665),//80
                         Padding(
                           padding: const EdgeInsets.only(left: 15),
                           child: Text('Email',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: MediaQuery.of(context).size.height - 755),//5
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Container(
-                            height: 50,
+                            height: MediaQuery.of(context).size.height - 710,//50
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
-                                child: TextField(decoration: InputDecoration(
+                                child: TextFormField(
+                                  controller: TextEditingController(text: user.email),
+                                  onChanged: (val){
+                                    user.email = val;
+                                  },
+                                  validator: (value){
+                                    if (value.isEmpty){
+                                      return 'Email is empty';
+                                    }
+                                    return '';
+                                  },
+                                  decoration: InputDecoration(
                                   border: InputBorder.none,
                                   prefixIcon: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                    child: Icon(
-                                      FontAwesomeIcons.envelope,
-                                      size: 20,
-                                      color: Colors.black54,
-                                    ),
+                                    child: Icon(FontAwesomeIcons.envelope, size: 20, color: Colors.black54,),
                                   ),
                                 ),
                                   style: TextStyle(color: Colors.black87),
@@ -85,24 +111,35 @@ class _SignInState extends State<SignIn> {
                               ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: MediaQuery.of(context).size.height - 730),//20
                         Padding(
                           padding: const EdgeInsets.only(left: 15),
                           child: Text('Password',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: MediaQuery.of(context).size.height - 755),//5
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
+                            height: MediaQuery.of(context).size.height - 710,//50
+                            decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
-                                child: TextField(decoration: InputDecoration(
+                                child: TextFormField(
+                                  controller: TextEditingController(text: user.password),
+                                  onChanged: (val){
+                                    user.password = val;
+                                  },
+                                  validator: (value){
+                                    if (value.isEmpty){
+                                      return 'Email is empty';
+                                    }
+                                    return '';
+                                  },
+                                  decoration: InputDecoration(
                                   border: InputBorder.none,
                                   prefixIcon: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -121,15 +158,34 @@ class _SignInState extends State<SignIn> {
                               ),
                           ),
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: MediaQuery.of(context).size.height - 730),//40
                         Center(
                           child: SizedBox(
-                            width: 180,
-                            height:45 ,
+                            width: MediaQuery.of(context).size.width-220,//180
+                            height:MediaQuery.of(context).size.height - 715 ,//45
                             child: RaisedButton(
                               onPressed: (){
-                                Navigator.of(context).pushNamed('/home');
-                                print('let"s go');
+                                if (user.email == "" || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(user.email)){
+                                  return Fluttertoast.showToast(
+                                      msg: "check your email",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.black54,
+                                      textColor: Colors.white,
+                                      fontSize: 18.0
+                                  );
+                                } if(user.password == "" || user.password.length < 7){
+                                  Fluttertoast.showToast(
+                                      msg: "check your password",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.black54,
+                                      textColor: Colors.white,
+                                      fontSize: 18.0
+                                  );
+                                } return save();
                               },
                               color: Colors.transparent,
                               elevation: 0,
@@ -147,12 +203,20 @@ class _SignInState extends State<SignIn> {
                     ),
                 ),
                 Center(
-                        child:
-                        Text("forget password?",
-                          style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white.withOpacity(0.4),decoration: TextDecoration.underline),
+                        child: InkWell(
+                          onTap: (){
+                            print("forget password?");
+                          },
+                          child: Text("forget password?",
+                            style: TextStyle(fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white.withOpacity(0.4),
+                                decoration: TextDecoration.underline),
+
+                          ),
                         ),
                       ),
-                SizedBox(height: 40),
+                SizedBox(height: MediaQuery.of(context).size.height - 730),//40
               ],
             ),
           ),

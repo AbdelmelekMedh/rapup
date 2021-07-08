@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/user.dart';
+import 'package:http/http.dart' as http;
+
 
 class SignUp extends StatefulWidget {
   @override
@@ -11,10 +17,26 @@ class _SignUpState extends State<SignUp> {
   String ValueGender;
   List listGender = ["Male", "Female","Other"];
   DateTime date ;
+  User user = User("","",DateTime.now(),"");
+
+  Future save() async {
+    var res = await http.post("http://localhost:8080/???",
+        headers: {'Context-Type':'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+          'dateofbirth': user.dateOfBierth.toIso8601String(),
+          'gender': user.gender}));
+    print(res.body);
+    if (res.body != null) {
+      Navigator.of(context).pushNamed('/signin');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: BackButton(),
@@ -38,6 +60,7 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
           Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
             body: Column(
               children: [
@@ -46,30 +69,41 @@ class _SignUpState extends State<SignUp> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 100),
+                      SizedBox(height: MediaQuery.of(context).size.height - 655),//100
                       Center(
                         child: Text('Create Account',
                           style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 80),
+                      SizedBox(height:MediaQuery.of(context).size.height - 665),//80
                       Padding(
                         padding: const EdgeInsets.only(left: 15),
                         child: Text('Your email',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height:MediaQuery.of(context).size.height - 755),//5
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
-                          height: 50,
+                          height: MediaQuery.of(context).size.height - 710,//50
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
-                            child: TextField(decoration: InputDecoration(
+                            child: TextFormField(
+                              controller: TextEditingController(text: user.email),
+                              onChanged: (val){
+                                user.email = val;
+                              },
+                              validator: (value){
+                                if (value.isEmpty){
+                                  return 'Email is empty';
+                                }
+                                return '';
+                              },
+                              decoration: InputDecoration(
                               border: InputBorder.none,
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -87,24 +121,35 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: MediaQuery.of(context).size.height - 730),//20
                       Padding(
                         padding: const EdgeInsets.only(left: 15),
                         child: Text('Create a password',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: MediaQuery.of(context).size.height - 755),//5
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
-                          height: 50,
+                          height: MediaQuery.of(context).size.height - 710,//50
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
-                            child: TextField(decoration: InputDecoration(
+                            child: TextFormField(
+                              controller: TextEditingController(text: user.password),
+                              onChanged: (val){
+                                user.password = val;
+                              },
+                              validator: (value){
+                                if (value.isEmpty){
+                                  return 'Email is empty';
+                                }
+                                return '';
+                              },
+                              decoration: InputDecoration(
                               border: InputBorder.none,
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -123,7 +168,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: MediaQuery.of(context).size.height - 730),//20
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
@@ -138,14 +183,13 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.only(left: 5),
                                     child: Text('Data of birth',style: TextStyle(fontWeight: FontWeight.bold),),
                                   ),
-                                  SizedBox(height: 10),
+                                  SizedBox(height: MediaQuery.of(context).size.height - 750),//10
                                   Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(color: Colors.white,width: 1),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: FlatButton(
-                                      //elevation: 0,
                                       onPressed: (){
                                         setState(() {
                                           SelectDate(context);
@@ -168,7 +212,6 @@ class _SignUpState extends State<SignUp> {
                                 ],
                               ),
                             ),
-                            //SizedBox(width: 20),
                             Padding(
                               padding: const EdgeInsets.only(right: 10),
                               child: Column(
@@ -178,7 +221,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.only(left: 5),
                                     child: Text('Gender',style: TextStyle(fontWeight: FontWeight.bold),),
                                   ),
-                                  SizedBox(height: 10),
+                                  SizedBox(height: MediaQuery.of(context).size.height - 750),//10
                                   Container(
                                     padding: EdgeInsets.only(left: 16,right: 10),
                                     decoration: BoxDecoration(
@@ -192,13 +235,12 @@ class _SignUpState extends State<SignUp> {
                                       iconSize: 30,
                                       //isExpanded: true,
                                       underline: SizedBox(),
-                                      style: TextStyle(
-                                          color: Colors.black87,fontSize: 15
-                                      ),
+                                      style: TextStyle(color: Colors.black87,fontSize: 15),
                                       value: ValueGender,
                                       onChanged: (newValue){
                                         setState(() {
                                           ValueGender = newValue;
+                                          user.gender = newValue;
                                         });
                                       },
                                       items: listGender.map((e) => DropdownMenuItem(
@@ -214,17 +256,56 @@ class _SignUpState extends State<SignUp> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 40),
+                      SizedBox(height: MediaQuery.of(context).size.height - 730),//40
                       Center(
                         child: SizedBox(
-                          width: 180,
-                          height:45 ,
+                          width: MediaQuery.of(context).size.width-220,//180
+                          height:MediaQuery.of(context).size.height - 715 ,//45
                           child: FlatButton(
                             onPressed: (){
-                              print('done');
+                              if (user.email == null || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(user.email)){
+                                return Fluttertoast.showToast(
+                                    msg: "check your email",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.white,
+                                    fontSize: 18.0
+                                );
+                              } if(user.password == "" || user.password.length < 7){
+                                Fluttertoast.showToast(
+                                    msg: "check your password",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.white,
+                                    fontSize: 18.0
+                                );
+                              } if (user.dateOfBierth == DateTime.now()){
+                                Fluttertoast.showToast(
+                                    msg: "select yor date of birth",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.white,
+                                    fontSize: 18.0
+                                );
+                              } if (user.gender == ""){
+                                Fluttertoast.showToast(
+                                    msg: "select your gender",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.white,
+                                    fontSize: 18.0
+                                );
+                              } return save();
                             },
                             color: Colors.transparent,
-                            //elevation: 0,
                             shape:
                             RoundedRectangleBorder(
                               side: BorderSide(color: Colors.white, width: 2),
@@ -234,7 +315,6 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      //SizedBox(height: 200),
                     ],
                   ),
                 ),
@@ -251,7 +331,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: MediaQuery.of(context).size.height - 730),//40
               ],
             ),
           ),
@@ -278,6 +358,9 @@ class _SignUpState extends State<SignUp> {
           );
         }
     );
+
+    user.dateOfBierth = datePicker;
+    print(user.dateOfBierth.toString());
 
     if(datePicker != null && datePicker != date){
       setState(() {

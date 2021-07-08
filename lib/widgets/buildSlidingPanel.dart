@@ -17,17 +17,17 @@ class buildSlidingPanel extends StatelessWidget {
         controller: scrollController,
         padding: EdgeInsets.zero,
         children:<Widget> [
-          SizedBox(height: 15),
+          SizedBox(height: MediaQuery.of(context).size.height- 745),
           buildTabBar(),
-         SizedBox(height: 40,),
+         SizedBox(height: MediaQuery.of(context).size.height- 720),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
               SizedBox(
-                width: 300,
-                height:50 ,
+                width: MediaQuery.of(context).size.width-90,
+                height: MediaQuery.of(context).size.height- 710,
                 child: RaisedButton(
                   onPressed: (){
                   print('button facebook');
@@ -38,16 +38,16 @@ class buildSlidingPanel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                     Icon(FontAwesomeIcons.facebook,color: Colors.white,size: 35,),
-                    SizedBox(width: 25),
+                    SizedBox(width: MediaQuery.of(context).size.width-370),
                     Text("Sign up with Facebook",style: TextStyle(fontSize: 18,color: Colors.white),),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 40,),
+              SizedBox(height: MediaQuery.of(context).size.height- 720),
               SizedBox(
-                width: 300,
-                height:50 ,
+                width: MediaQuery.of(context).size.width-90,
+                height:MediaQuery.of(context).size.height- 710 ,
                 child: RaisedButton(
                   onPressed: (){
                   print('button google');
@@ -57,16 +57,16 @@ class buildSlidingPanel extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(FontAwesomeIcons.google,size: 30,),
-                      SizedBox(width: 25),
+                      SizedBox(width: MediaQuery.of(context).size.width-370),
                       Text("Sign up with Google",style: TextStyle(fontSize: 18,color: Colors.black),),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: MediaQuery.of(context).size.height- 720),
               SizedBox(
-                width: 300,
-                height:50 ,
+                width: MediaQuery.of(context).size.width-90,
+                height:MediaQuery.of(context).size.height- 710 ,
                 child: RaisedButton(
                   onPressed: (){
                     //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
@@ -83,20 +83,20 @@ class buildSlidingPanel extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(FontAwesomeIcons.mailBulk,size: 30,color: Colors.white,),
-                      SizedBox(width: 25),
+                      SizedBox(width: MediaQuery.of(context).size.width-370),
                       Text("Sign up with Email",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white),),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: MediaQuery.of(context).size.height- 720),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: 20,),
+                  SizedBox(width: MediaQuery.of(context).size.width-380),
                   Text("Already have an account?",style: TextStyle(fontSize: 16,color: Colors.white70)),
-                  SizedBox(width: 10,),
+                  SizedBox(width: MediaQuery.of(context).size.width-390),
                   FlatButton(
                     onPressed: (){
                       //Navigator.push(context, new MaterialPageRoute(builder: (context) => SignIn()));

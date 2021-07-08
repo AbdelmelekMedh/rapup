@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class VideoDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Container(
-          padding: EdgeInsets.only(left: 5,top: 20),
+    return  Container(
+      color: Colors.transparent.withOpacity(0.2),
+      width: MediaQuery.of(context).size.width - 100,
+      height: MediaQuery.of(context).size.height -655,
+          padding: EdgeInsets.only(left: 5,top: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -19,6 +21,6 @@ class VideoDescription extends StatelessWidget {
               ),
       ],
     ),
-        ));
+        );
   }
 }
