@@ -20,21 +20,23 @@ class _SocialActionState extends State<SocialAction> {
               elevation: 0,
               backgroundColor:  Colors.transparent,
               onPressed:(){
+                Navigator.of(context).pushNamed('/friendProfile');
                 print("FollowAction");
               } ,
-              child: _getProfilePicture(),
+              child: getFollowAction(),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+            SizedBox(height: MediaQuery.of(context).size.height/150),//10
             FloatingActionButton(
               heroTag: "social 1",
               elevation: 0,
               backgroundColor:  Colors.grey.withOpacity(0.8),
               onPressed: (){
+                Navigator.of(context).pushNamed('/map');
                 print("SocialAction 1");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.mapMarkerAlt, title: '', isShare: true),
+              child: Icon(FontAwesomeIcons.mapMarkerAlt,size: 25.0, color: Colors.black),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+            SizedBox(height: MediaQuery.of(context).size.height/150),//10
             FloatingActionButton(
               heroTag: "social 2",
               elevation: 0,
@@ -42,9 +44,9 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("socialAction 2");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.solidHeart, title: '1.6M'),
+              child:getSocialAction(title: '1.2M',icon: FontAwesomeIcons.solidHeart),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+            SizedBox(height: MediaQuery.of(context).size.height/150),//10
             FloatingActionButton(
               heroTag: "social 3",
               elevation: 0,
@@ -52,9 +54,9 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("socialAction 3");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.solidCommentAlt, title: '1.6M'),
+              child: getSocialAction(title: '1.5K',icon: FontAwesomeIcons.solidCommentAlt),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+            SizedBox(height: MediaQuery.of(context).size.height/150),//10
             FloatingActionButton(
               heroTag: "social 4",
               elevation: 0,
@@ -62,9 +64,9 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("SocialAction 4");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.solidCircle, title: '', isShare: true),
+              child: Image.asset('assets/images/output-onlinepngtools.png'),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+            SizedBox(height: MediaQuery.of(context).size.height/150),//10
             FloatingActionButton(
               heroTag: "social 5",
               elevation: 0,
@@ -72,7 +74,7 @@ class _SocialActionState extends State<SocialAction> {
               onPressed: (){
                 print("SocialAction 5");
               },
-              child: getSocialAction(icon: FontAwesomeIcons.shareAlt, title: '', isShare: true),
+              child: Icon(FontAwesomeIcons.shareAlt,size: 25.0, color: Colors.black),
             ),
           ]
       ),
@@ -80,24 +82,31 @@ class _SocialActionState extends State<SocialAction> {
   }
 
 
-  Widget getSocialAction({String title, IconData icon, bool isShare = false}) {
-    return Container(
-        width: 50.0,
+  Widget getIconAction({IconData icon}) {
+    return Positioned(
+      left: 2.5,
+      top: 5,
+      child: Container(
+        padding: EdgeInsets.all(1.0),
         height: 50.0,
-        child: Icon(icon,size: 25.0, color: Colors.black),
-              /*Padding(padding: EdgeInsets.only(top: 2),
-                  child: Text(title, style: TextStyle(fontSize: isShare ? 0 : 12, color: Colors.black))
-              )*/
+        width: 50.0,
+          child: Icon(icon,size: 25.0, color: Colors.black),
+      ),
     );
   }
 
   Widget getFollowAction(){
     return  Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      width: 60,
-      height: 60,
       child: Stack(
         children: [_getProfilePicture(), _getPlusIcon()],
+      ),
+    );
+  }
+
+  Widget getSocialAction({String title,IconData icon}){
+    return  Container(
+      child: Stack(
+        children: [getIconAction(icon: icon), _getTextIcon(title: title)],
       ),
     );
   }
@@ -124,16 +133,32 @@ class _SocialActionState extends State<SocialAction> {
 
   Widget _getPlusIcon() {
     return Positioned(
-      bottom: 0,
-      left: ((60 / 2) - (20 / 2)),
+      top: 0,
+      left: 0,
       child: Container(
-          width: 20,
-          height: 20,
+          width: 15,
+          height: 15,
           decoration: BoxDecoration(
               color: Color.fromARGB(255, 79, 205, 247),
               borderRadius: BorderRadius.circular(15.0),
           ),
-          child: Icon(Icons.add, color: Colors.black, size: 20.0)
+          child: Icon(Icons.add, color: Colors.black, size: 15.0)
+      ),
+    );
+  }
+
+  Widget _getTextIcon({String title}) {
+    return Positioned(
+      top: 3,
+      left: 0,
+      child: Container(
+          width: 31,
+          height: 11,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Text(title, style: TextStyle(fontSize:10, color: Colors.black)),
       ),
     );
   }

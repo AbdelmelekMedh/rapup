@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/Start_Screen.dart';
-import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/home.dart';
-import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/sign_in.dart';
-import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/pages/sign_up.dart';
+import 'package:rapup/pages/Start_Screen.dart';
+import 'package:rapup/pages/friendProfile.dart';
+import 'package:rapup/pages/home.dart';
+import 'package:rapup/pages/map.dart';
+import 'package:rapup/pages/sign_in.dart';
+import 'package:rapup/pages/sign_up.dart';
+
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -18,6 +21,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SignUp());
       case '/home':
         return MaterialPageRoute(builder: (_) => Home());
+      case '/friendProfile':
+        return MaterialPageRoute(builder: (_) => FriendProfile());
+      case '/map':
+        return MaterialPageRoute(builder: (_) => MapScreen());
 
       default:
         return _errorRoute();

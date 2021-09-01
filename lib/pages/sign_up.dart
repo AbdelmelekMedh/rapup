@@ -17,18 +17,19 @@ class _SignUpState extends State<SignUp> {
   String ValueGender;
   List listGender = ["Male", "Female","Other"];
   DateTime date ;
-  User user = User("","",DateTime.now(),"");
+  User user = User("","","",DateTime.now(),"");
 
   Future save() async {
-    var res = await http.post("http://localhost:8080/???",
-        headers: {'Context-Type':'application/json'},
+    var res = await http.post("http://10.0.2.2:8080/api/auth/signup",
+        headers: {'Content-Type':'application/json'},
         body: json.encode({
+          'username': user.userName,
           'email': user.email,
           'password': user.password,
-          'dateofbirth': user.dateOfBierth.toIso8601String(),
+          'dateOfBirth': user.dateOfBierth.toIso8601String(),
           'gender': user.gender}));
     print(res.body);
-    if (res.body != null) {
+    if (res.statusCode == 200) {
       Navigator.of(context).pushNamed('/signin');
     }
   }
@@ -69,24 +70,70 @@ class _SignUpState extends State<SignUp> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: MediaQuery.of(context).size.height - 655),//100
+                      SizedBox(height: MediaQuery.of(context).size.height/8),//100
                       Center(
                         child: Text('Create Account',
                           style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height:MediaQuery.of(context).size.height - 665),//80
+                      SizedBox(height:MediaQuery.of(context).size.height/20),//80
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Text('Username',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(height:MediaQuery.of(context).size.height/200),//5
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height/15,//50
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: TextFormField(
+                              controller: TextEditingController(text: user.userName),
+                              onChanged: (val){
+                                user.userName = val;
+                              },
+                              validator: (value){
+                                if (value.isEmpty){
+                                  return 'user name is empty';
+                                }
+                                return '';
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.user,
+                                    size: 20,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ),
+                              style: TextStyle(color: Colors.black87),
+                              keyboardType: TextInputType.name,
+                              textInputAction: TextInputAction.next,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height/50),
                       Padding(
                         padding: const EdgeInsets.only(left: 15),
                         child: Text('Your email',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height:MediaQuery.of(context).size.height - 755),//5
+                      SizedBox(height:MediaQuery.of(context).size.height/200),//5
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
-                          height: MediaQuery.of(context).size.height - 710,//50
+                          height: MediaQuery.of(context).size.height/15,//50
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10),
@@ -121,18 +168,18 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height - 730),//20
+                      SizedBox(height: MediaQuery.of(context).size.height/50),//20
                       Padding(
                         padding: const EdgeInsets.only(left: 15),
                         child: Text('Create a password',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height - 755),//5
+                      SizedBox(height: MediaQuery.of(context).size.height/200),//5
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
-                          height: MediaQuery.of(context).size.height - 710,//50
+                          height: MediaQuery.of(context).size.height/15,//50
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10),
@@ -168,7 +215,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height - 730),//20
+                      SizedBox(height: MediaQuery.of(context).size.height/50),//20
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
@@ -183,7 +230,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.only(left: 5),
                                     child: Text('Data of birth',style: TextStyle(fontWeight: FontWeight.bold),),
                                   ),
-                                  SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+                                  SizedBox(height: MediaQuery.of(context).size.height/150),//10
                                   Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(color: Colors.white,width: 1),
@@ -193,12 +240,13 @@ class _SignUpState extends State<SignUp> {
                                       onPressed: (){
                                         setState(() {
                                           SelectDate(context);
+                                          user.dateOfBierth = date;
                                         });
                                       },
                                       color: Colors.transparent,
                                       child: Row(
                                         children: [
-                                          Text( date == null ? 'picke your bierth' : ' ${date.year}/${date.month}/${date.day} ',
+                                          Text( date == null ? 'Date picker' : ' ${date.year}/${date.month}/${date.day} ',
                                             style: TextStyle(color: Colors.black54,fontSize: 15),
                                           ),
                                           Padding(
@@ -221,7 +269,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.only(left: 5),
                                     child: Text('Gender',style: TextStyle(fontWeight: FontWeight.bold),),
                                   ),
-                                  SizedBox(height: MediaQuery.of(context).size.height - 750),//10
+                                  SizedBox(height: MediaQuery.of(context).size.height/150),//10
                                   Container(
                                     padding: EdgeInsets.only(left: 16,right: 10),
                                     decoration: BoxDecoration(
@@ -229,7 +277,7 @@ class _SignUpState extends State<SignUp> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: DropdownButton(
-                                      hint: Text(' select gender '),
+                                      hint: Text('Gender selector'),
                                       dropdownColor: Colors.white.withOpacity(0.5),
                                       icon: Icon(FontAwesomeIcons.angleDown,color: Colors.white,),
                                       iconSize: 30,
@@ -256,14 +304,23 @@ class _SignUpState extends State<SignUp> {
                           ],
                         ),
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height - 730),//40
+                      SizedBox(height: MediaQuery.of(context).size.height/20),//40
                       Center(
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width-220,//180
-                          height:MediaQuery.of(context).size.height - 715 ,//45
+                          width: MediaQuery.of(context).size.width/3,//180
+                          height:MediaQuery.of(context).size.height/15,//45
                           child: FlatButton(
                             onPressed: (){
-                              if (user.email == null || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(user.email)){
+                              if(user.userName == ""){
+                                return Fluttertoast.showToast(
+                                    msg: "check your user name",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.white,
+                                    fontSize: 18.0);
+                              }if (user.email == ""){
                                 return Fluttertoast.showToast(
                                     msg: "check your email",
                                     toastLength: Toast.LENGTH_LONG,
@@ -273,7 +330,7 @@ class _SignUpState extends State<SignUp> {
                                     textColor: Colors.white,
                                     fontSize: 18.0
                                 );
-                              } if(user.password == "" || user.password.length < 7){
+                              } if(user.password == ""){
                                 Fluttertoast.showToast(
                                     msg: "check your password",
                                     toastLength: Toast.LENGTH_LONG,
@@ -331,7 +388,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height - 730),//40
+                SizedBox(height: MediaQuery.of(context).size.height/80),//40
               ],
             ),
           ),

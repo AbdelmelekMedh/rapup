@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   final List<Widget> screens = [
     Dashboard(),
     Chat(),
-    Profile(),
+    ProfileScreen(),
     Explore(),
   ];
   final PageStorageBucket bucket = PageStorageBucket();
@@ -27,19 +27,23 @@ class _HomeState extends State<Home> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent.withOpacity(0.2),
       body: PageStorage(
         child: currentScreen,
         bucket: bucket,
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'mainAct',
-        child: Icon(Icons.add),
+        backgroundColor: Colors.transparent.withOpacity(0.2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Image.asset('assets/images/playlist.png'),
         onPressed: (){},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
+        color: Colors.transparent.withOpacity(0.2),
         elevation: 0,
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
@@ -53,7 +57,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width - 300,//40
+                    minWidth: MediaQuery.of(context).size.width/10,//40
                     onPressed: (){
                       setState(() {
                         currentScreen = Dashboard();
@@ -75,7 +79,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width - 300,
+                    minWidth: MediaQuery.of(context).size.width/10,
                     onPressed: (){
                       setState(() {
                         currentScreen = Explore();
@@ -102,7 +106,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width - 300,
+                    minWidth: MediaQuery.of(context).size.width/10,
                     onPressed: (){
                       setState(() {
                         currentScreen = Chat();
@@ -124,10 +128,10 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width - 300,
+                    minWidth: MediaQuery.of(context).size.width /10,
                     onPressed: (){
                       setState(() {
-                        currentScreen = Profile();
+                        currentScreen = ProfileScreen();
                         currentTab = 3;
                       });
                     },

@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/models/login_model.dart';
+import 'package:rapup/services/shared_service.dart';
 import 'package:rapup/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:rapup/widgets/showMessage.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -14,15 +17,23 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
 
-  User user = User("","",DateTime.now(),"");
+  User user = User("","","",DateTime.now(),"");
 
-  Future save() async {
-    var res = await http.post("http://localhost:8080/???",
-        headers: {'Context-Type':'application/json'},
-        body: json.encode({'email': user.email, 'password': user.password}));
-    print(res.body);
-    if (res.body != null) {
-      Navigator.of(context).pushNamed('/home');
+  Future login() async {
+    final res = await http.post(Uri.parse("http://192.168.1.13:8080/api/auth/signin"),
+        headers: <String, String>{'Content-Type':'application/json'},
+        body: json.encode(<String, String>{
+          'username': user.userName,
+          'password': user.password}));
+    if (res.statusCode == 200) {
+      LoginResponseModel logResModel = loginResponseModelFormJson(res.body);
+      Navigator.of(context).pushNamed('/home',arguments: logResModel);
+      if (logResModel.message == ""){
+        SharedService.setLoginDetails(logResModel);
+        print(logResModel.dateOfBirth);
+      }
+    }else {
+      ShowMessage(context, "login", "invalid username or password", "ok", (){Navigator.of(context).pop;});
     }
   }
 
@@ -63,37 +74,37 @@ class _SignInState extends State<SignIn> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: MediaQuery.of(context).size.height - 655),//100
+                        SizedBox(height: MediaQuery.of(context).size.height/6),//100
                         Center(
                           child: Text('Log In',
                             style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height:MediaQuery.of(context).size.height - 665),//80
+                        SizedBox(height:MediaQuery.of(context).size.height/8),//80
                         Padding(
                           padding: const EdgeInsets.only(left: 15),
-                          child: Text('Email',
+                          child: Text('Username',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height - 755),//5
+                        SizedBox(height: MediaQuery.of(context).size.height/200),//5
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Container(
-                            height: MediaQuery.of(context).size.height - 710,//50
+                            height: MediaQuery.of(context).size.height/15,//50
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
                                 child: TextFormField(
-                                  controller: TextEditingController(text: user.email),
+                                  controller: TextEditingController(text: user.userName),
                                   onChanged: (val){
-                                    user.email = val;
+                                    user.userName = val;
                                   },
                                   validator: (value){
                                     if (value.isEmpty){
-                                      return 'Email is empty';
+                                      return 'username is empty';
                                     }
                                     return '';
                                   },
@@ -101,28 +112,28 @@ class _SignInState extends State<SignIn> {
                                   border: InputBorder.none,
                                   prefixIcon: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                    child: Icon(FontAwesomeIcons.envelope, size: 20, color: Colors.black54,),
+                                    child: Icon(FontAwesomeIcons.user, size: 20, color: Colors.black54,),
                                   ),
                                 ),
                                   style: TextStyle(color: Colors.black87),
-                                  keyboardType: TextInputType.emailAddress,
+                                  keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
                                 ),
                               ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height - 730),//20
+                        SizedBox(height: MediaQuery.of(context).size.height/50),//20
                         Padding(
                           padding: const EdgeInsets.only(left: 15),
                           child: Text('Password',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height - 755),//5
+                        SizedBox(height: MediaQuery.of(context).size.height/200),//5
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Container(
-                            height: MediaQuery.of(context).size.height - 710,//50
+                            height: MediaQuery.of(context).size.height/15,//50
                             decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(10),
@@ -158,16 +169,16 @@ class _SignInState extends State<SignIn> {
                               ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height - 730),//40
+                        SizedBox(height: MediaQuery.of(context).size.height/20),//40
                         Center(
                           child: SizedBox(
-                            width: MediaQuery.of(context).size.width-220,//180
-                            height:MediaQuery.of(context).size.height - 715 ,//45
+                            width: MediaQuery.of(context).size.width/3,//180
+                            height:MediaQuery.of(context).size.height/15,//45
                             child: RaisedButton(
                               onPressed: (){
-                                if (user.email == "" || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(user.email)){
+                                if (user.userName == ""){
                                   return Fluttertoast.showToast(
-                                      msg: "check your email",
+                                      msg: "check your username",
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
@@ -175,7 +186,7 @@ class _SignInState extends State<SignIn> {
                                       textColor: Colors.white,
                                       fontSize: 18.0
                                   );
-                                } if(user.password == "" || user.password.length < 7){
+                                } if(user.password == ""){
                                   Fluttertoast.showToast(
                                       msg: "check your password",
                                       toastLength: Toast.LENGTH_LONG,
@@ -185,7 +196,7 @@ class _SignInState extends State<SignIn> {
                                       textColor: Colors.white,
                                       fontSize: 18.0
                                   );
-                                } return save();
+                                } return login();
                               },
                               color: Colors.transparent,
                               elevation: 0,
@@ -216,7 +227,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ),
                       ),
-                SizedBox(height: MediaQuery.of(context).size.height - 730),//40
+                SizedBox(height: MediaQuery.of(context).size.height/80),//40
               ],
             ),
           ),

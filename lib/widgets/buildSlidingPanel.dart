@@ -17,17 +17,17 @@ class buildSlidingPanel extends StatelessWidget {
         controller: scrollController,
         padding: EdgeInsets.zero,
         children:<Widget> [
-          SizedBox(height: MediaQuery.of(context).size.height- 745),
+          SizedBox(height: MediaQuery.of(context).size.height/100),//15
           buildTabBar(),
-         SizedBox(height: MediaQuery.of(context).size.height- 720),
+         SizedBox(height: MediaQuery.of(context).size.height/15),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width-90,
-                height: MediaQuery.of(context).size.height- 710,
+                width: MediaQuery.of(context).size.width/1.3,
+                height: MediaQuery.of(context).size.height/15,//50
                 child: RaisedButton(
                   onPressed: (){
                   print('button facebook');
@@ -38,16 +38,16 @@ class buildSlidingPanel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                     Icon(FontAwesomeIcons.facebook,color: Colors.white,size: 35,),
-                    SizedBox(width: MediaQuery.of(context).size.width-370),
+                    SizedBox(width: MediaQuery.of(context).size.width/30),
                     Text("Sign up with Facebook",style: TextStyle(fontSize: 18,color: Colors.white),),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height- 720),
+              SizedBox(height: MediaQuery.of(context).size.height/25),
               SizedBox(
-                width: MediaQuery.of(context).size.width-90,
-                height:MediaQuery.of(context).size.height- 710 ,
+                width: MediaQuery.of(context).size.width/1.3,
+                height:MediaQuery.of(context).size.height/15,
                 child: RaisedButton(
                   onPressed: (){
                   print('button google');
@@ -57,16 +57,16 @@ class buildSlidingPanel extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(FontAwesomeIcons.google,size: 30,),
-                      SizedBox(width: MediaQuery.of(context).size.width-370),
+                      SizedBox(width: MediaQuery.of(context).size.width/30),
                       Text("Sign up with Google",style: TextStyle(fontSize: 18,color: Colors.black),),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height- 720),
+              SizedBox(height: MediaQuery.of(context).size.height/25),
               SizedBox(
-                width: MediaQuery.of(context).size.width-90,
-                height:MediaQuery.of(context).size.height- 710 ,
+                width: MediaQuery.of(context).size.width/1.3,
+                height:MediaQuery.of(context).size.height/15,
                 child: RaisedButton(
                   onPressed: (){
                     //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
@@ -83,20 +83,20 @@ class buildSlidingPanel extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(FontAwesomeIcons.mailBulk,size: 30,color: Colors.white,),
-                      SizedBox(width: MediaQuery.of(context).size.width-370),
+                      SizedBox(width: MediaQuery.of(context).size.width/25),
                       Text("Sign up with Email",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white),),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height- 720),
+              SizedBox(height: MediaQuery.of(context).size.height/25),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: MediaQuery.of(context).size.width-380),
+                  SizedBox(width: MediaQuery.of(context).size.width/20),
                   Text("Already have an account?",style: TextStyle(fontSize: 16,color: Colors.white70)),
-                  SizedBox(width: MediaQuery.of(context).size.width-390),
+                  SizedBox(width: MediaQuery.of(context).size.width/50),
                   FlatButton(
                     onPressed: (){
                       //Navigator.push(context, new MaterialPageRoute(builder: (context) => SignIn()));

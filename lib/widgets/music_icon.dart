@@ -6,11 +6,14 @@ class MusicIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent.withOpacity(0.2),
-      width: MediaQuery.of(context).size.width - 293,//100
-      height: MediaQuery.of(context).size.height -655,//100
+      width: MediaQuery.of(context).size.width/4,//100
+      height: MediaQuery.of(context).size.height/6,//100
       child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [getMusicPlayerAction()]),
+          children: [
+            getMusicPlayerAction(),
+            SizedBox(height: MediaQuery.of(context).size.height/60,)
+          ]),
     );
   }
 
@@ -30,23 +33,7 @@ class MusicIcon extends StatelessWidget {
     return Container(
         width: 60.0,
         height: 60.0,
-        child: Column(children: [
-          Container(
-            padding: EdgeInsets.all(11.0),
-            height: 50.0,
-            width: 50.0,
-            decoration: BoxDecoration(
-                gradient: musicGradient,
-                borderRadius: BorderRadius.circular(50.0 / 2)
-            ),
-            child: CachedNetworkImage(
-              imageUrl: "https://icon-library.com/images/song-icon-png/song-icon-png-13.jpg",
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            ),
-          ),
-
-        ])
+        child: Image.asset('assets/images/playingsmall.png'),
     );
   }
 }

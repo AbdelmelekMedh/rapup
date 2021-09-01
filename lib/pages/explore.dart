@@ -39,7 +39,7 @@ class _ExploreState extends State<Explore> {
           ListView(
             padding: EdgeInsets.zero,
               children:<Widget> [
-                SizedBox(height: MediaQuery.of(context).size.height - 700),//55
+                SizedBox(height: MediaQuery.of(context).size.height/10),//55
                 Center(
                   child: Text(' Explore ',
                     style: TextStyle(fontSize: 17),
@@ -62,7 +62,7 @@ class _ExploreState extends State<Explore> {
                           Text('73.4 M',style: TextStyle(fontSize: 12,color: Colors.transparent.withOpacity(0.4))),
                         ],
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width - 385),//10
+                      SizedBox(width: MediaQuery.of(context).size.width /150),//10
                       SmoothStarRating(
                         starCount:1,
                         color: Colors.yellow,
@@ -97,7 +97,7 @@ class _ExploreState extends State<Explore> {
                       ),
                 ),
                 categoriesScroller,
-                SizedBox(height: MediaQuery.of(context).size.height - 665),//80
+                SizedBox(height: MediaQuery.of(context).size.height/8),//80
               ],
           ),
         ],

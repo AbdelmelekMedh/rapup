@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rapup/route_generator.dart';
+import 'package:rapup/services/shared_service.dart';
 
-void main() {
+String path = '/';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  bool reslt = await SharedService.isloggedIn();
+  if (reslt){
+    path = '/home';
+  }
   runApp(MyApp());
 }
 
@@ -17,7 +25,7 @@ class MyApp extends StatelessWidget {
           displayColor: Colors.white,
         ),
       ),
-      initialRoute: '/home',
+      initialRoute: path,
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
