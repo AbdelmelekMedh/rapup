@@ -64,7 +64,7 @@ class _FriendProfileState extends State<FriendProfile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    bio(context),
+                    bio(context,"mohsen"),
                     Row(
                       children: [
                         followProfile(),SizedBox(width: MediaQuery.of(context).size.width/100),messageProfile(),

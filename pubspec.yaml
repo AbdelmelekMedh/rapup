@@ -43,6 +43,8 @@ dependencies:
   dio: ^3.0.10
   google_maps_flutter: ^1.2.0
   switch_it: ^0.0.1
+  agora_rtm: ^0.9.14
+
 
 dev_dependencies:
   flutter_test:
@@ -61,9 +63,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/images/playlist.png
-   - assets/images/playingsmall.png
-   - assets/images/output-onlinepngtools.png
+   - assets/images/
    - videos/intro.mp4
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapup/common/utils.dart';
+import 'package:rapup/models/login_model.dart';
 import 'package:rapup/services/shared_service.dart';
+import 'package:rapup/user.dart';
 import 'package:rapup/widgets/app_bar.dart';
 import 'package:rapup/widgets/profile_tab_bar.dart';
 import 'package:rapup/widgets/profile_widgets.dart';
@@ -16,11 +18,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
   int _pageIndex = 0;
+  LoginResponseModel logResModel;
+
+
   @override
   Widget build(BuildContext context) {
-    //LoginResponseModel logResModel;
+
     var _screen = MediaQuery.of(context).size;
+
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -66,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    bio(context),
+                    bio(context,"melek"),
                     editProfile(context),
                   ],
                 ),

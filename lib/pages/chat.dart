@@ -1,34 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/components/chat/chatbody.dart';
+
+
 
 class Chat extends StatefulWidget {
+
+
   @override
   _ChatState createState() => _ChatState();
 }
 
 class _ChatState extends State<Chat> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      body:Stack(
-        children:<Widget> [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFF3F2F2),
-                  Color(0xFFF93B3B),
-                  Color(0xFFE7680D),
-                  Color(0xFF8B7C71),
-                ],
-              ),
-            ),
-          ),
-        ],
+      appBar: buildAppBar(),
+      body: ChatBody(),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height/15),
+        child: FloatingActionButton(
+          heroTag: "message",
+          onPressed: () {},
+          backgroundColor: Colors.blueGrey,
+          child: Icon(FontAwesomeIcons.commentAlt, color: Colors.white),
+        ),
       ),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.grey,
+      automaticallyImplyLeading: false,
+      title: Text("Chats"),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }

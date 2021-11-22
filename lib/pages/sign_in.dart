@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
   User user = User("","","",DateTime.now(),"");
 
   Future login() async {
-    final res = await http.post(Uri.parse("http://192.168.1.13:8080/api/auth/signin"),
+    final res = await http.post(Uri.parse("http://10.0.2.2:8080/api/auth/signin"),
         headers: <String, String>{'Content-Type':'application/json'},
         body: json.encode(<String, String>{
           'username': user.userName,

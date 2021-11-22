@@ -9,20 +9,17 @@ class SharedService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString("login_details") != null ? true : false ;
   }
-  static Future<LoginResponseModel> loginDetails()async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("login_details") != null
-        ? LoginResponseModel.fromJson(
-        jsonDecode(
-            prefs.getString("login_details"),
-        ),
-    )
-        : null;
-  }
 
   static Future<void> setLoginDetails(LoginResponseModel logResModel) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString("login_details", logResModel != null ? jsonEncode(logResModel.toJson()) : null);
+  }
+
+  static Future<LoginResponseModel> loginDetails()async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("login_details") != null
+        ? LoginResponseModel.fromJson(jsonDecode(prefs.getString("login_details")))
+        : null;
   }
 
   static Future<void> logout(BuildContext context) async {

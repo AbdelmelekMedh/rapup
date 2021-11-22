@@ -4,6 +4,7 @@ LoginResponseModel loginResponseModelFormJson(String str) =>
     LoginResponseModel.fromJson(json.decode(str));
 
 class LoginResponseModel {
+
   String id ;
   String username;
   String email;
@@ -14,6 +15,8 @@ class LoginResponseModel {
   String dateOfBirth;
 
   LoginResponseModel({this.id,this.username,this.email,this.accessToken,this.message,this.tokenType,this.gender,this.dateOfBirth});
+
+
 
   factory LoginResponseModel.fromJson(Map<String,dynamic> json){
     return LoginResponseModel(
@@ -41,3 +44,4 @@ class LoginResponseModel {
     return data;
   }
 }
+

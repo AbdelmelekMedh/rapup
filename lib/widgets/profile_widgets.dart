@@ -3,6 +3,7 @@ import 'package:rapup/common/utils.dart';
 import 'package:rapup/models/login_model.dart';
 import 'package:rapup/services/shared_service.dart';
 
+
 Widget profileStats() {
   return Container(
     padding: const EdgeInsets.only(left: 10, right: 10),
@@ -41,7 +42,7 @@ Widget follow({Size screen}){
   );
 }
 
-Widget bio(BuildContext context) {
+Widget bio(BuildContext context, String username) {
   return Container(
     color: Colors.black,
     width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/3,
@@ -52,7 +53,7 @@ Widget bio(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          '@melek',
+          '@${username}',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white,fontSize: 16),
         ),
         Text(

@@ -4,6 +4,8 @@ import 'package:rapup/services/shared_service.dart';
 
 String path = '/';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   bool reslt = await SharedService.isloggedIn();
@@ -14,6 +16,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,6 +30,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: path,
       onGenerateRoute: RouteGenerator.generateRoute,
+
     );
   }
 }

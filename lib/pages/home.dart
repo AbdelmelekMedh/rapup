@@ -1,9 +1,16 @@
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/logs.dart';
+import 'package:rapup/models/login_model.dart';
 import 'package:rapup/pages/chat.dart';
 import 'package:rapup/pages/dashboard.dart';
 import 'package:rapup/pages/explore.dart';
 import 'package:rapup/pages/profile.dart';
+import 'package:rapup/services/shared_service.dart';
+
+const appId = "3eb392d796b64b558fa2e0922dd494bc";
+
 
 class Home extends StatefulWidget {
   @override
@@ -11,6 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
 
   int currentTab = 0;
   final List<Widget> screens = [
