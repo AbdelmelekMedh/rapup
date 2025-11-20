@@ -10,7 +10,7 @@ import 'package:rapup/pages/sign_up.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
 
-    final args = settings.arguments;
+    //final args = settings.arguments;
 
     switch (settings.name) {
       case '/':
