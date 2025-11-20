@@ -8,7 +8,7 @@ String path = '/';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  bool reslt = await SharedService.isloggedIn();
+  bool reslt = await SharedService.isLoggedIn();
   if (reslt){
     path = '/home';
   }

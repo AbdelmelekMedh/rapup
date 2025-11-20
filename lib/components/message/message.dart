@@ -7,41 +7,41 @@ import 'package:rapup/models/ChatMessage.dart';
 
 class Message extends StatelessWidget {
   const Message({
-    Key key,
-    this.message,
+    Key? key,
+    required this.message,
   }) : super(key: key);
 
   final ChatMessage message;
 
+  Widget _buildMessageContent(ChatMessage message) {
+    switch (message.messageType) {
+      case ChatMessageType.text:
+        return TextMessage(message: message);
+      case ChatMessageType.audio:
+        return AudioMessage(message: message);
+      case ChatMessageType.video:
+        return VideoMessage();
+      default:
+        return const SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    Widget messageContaint (ChatMessage message) {
-      switch (message.messageType) {
-        case ChatMessageType.text:
-          return TextMessage(message: message);
-        case ChatMessageType.audio:
-          return AudioMessage(message: message);
-        case ChatMessageType.video:
-          return VideoMessage();
-        default:
-          return SizedBox();
-      }
-    }
-
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Row(
-        mainAxisAlignment: message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!message.isSender) ...[
-            CircleAvatar(
+            const CircleAvatar(
               radius: 12,
               backgroundImage: AssetImage("assets/images/user_2.png"),
             ),
-            SizedBox(width: 10/2),
+            const SizedBox(width: 5),
           ],
-          messageContaint(message),
+          _buildMessageContent(message),
           if (message.isSender) MessageStatusDot(status: message.messageStatus)
         ],
       ),
@@ -52,28 +52,30 @@ class Message extends StatelessWidget {
 class MessageStatusDot extends StatelessWidget {
   final MessageStatus status;
 
-  const MessageStatusDot({Key key, this.status}) : super(key: key);
+  const MessageStatusDot({Key? key, required this.status}) : super(key: key);
+
+  Color _dotColor(BuildContext context) {
+    switch (status) {
+      case MessageStatus.not_sent:
+        return const Color(0xFFF03738);
+      case MessageStatus.not_view:
+        return Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.1) ??
+            Colors.grey;
+      case MessageStatus.viewed:
+        return const Color(0xFF00BF6D);
+      default:
+        return Colors.transparent;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Color dotColor(MessageStatus status) {
-      switch (status) {
-        case MessageStatus.not_sent:
-          return Color(0xFFF03738);
-        case MessageStatus.not_view:
-          return Theme.of(context).textTheme.bodyText1.color.withOpacity(0.1);
-        case MessageStatus.viewed:
-          return Color(0xFF00BF6D);
-        default:
-          return Colors.transparent;
-      }
-    }
-
     return Container(
-      margin: EdgeInsets.only(left: 5),
+      margin: const EdgeInsets.only(left: 5),
       height: 12,
       width: 12,
       decoration: BoxDecoration(
-        color: dotColor(status),
+        color: _dotColor(context),
         shape: BoxShape.circle,
       ),
       child: Icon(

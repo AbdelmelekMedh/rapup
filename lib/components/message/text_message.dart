@@ -4,8 +4,8 @@ import 'package:rapup/models/ChatMessage.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({
-    Key key,
-    this.message,
+    Key? key,
+    required this.message,
   }) : super(key: key);
 
   final ChatMessage message;

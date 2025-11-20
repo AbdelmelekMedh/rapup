@@ -6,14 +6,14 @@ class RapupAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget leading;
   final Widget center;
   final Widget trailing;
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   const RapupAppBar({
-    Key key,
-    @required this.height,
-    this.leading,
-    @required this.center,
-    this.trailing,
+    Key? key,
+    required this.height,
+    required this.leading,
+    required this.center,
+    required this.trailing,
     this.isProfileScreen = false,
     this.backgroundColor,
   }) : super(key: key);
@@ -21,11 +21,9 @@ class RapupAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20),
       height: height,
-      color: backgroundColor == null
-          ? Theme.of(context).primaryColor
-          : backgroundColor,
+      color: backgroundColor ?? Theme.of(context).primaryColor,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,

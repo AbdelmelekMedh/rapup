@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
-    Key key,
-    this.text,
-    this.press,
+    Key? key,
+    required this.text,
+    required this.press,
     this.color = Colors.black,
     this.padding = const EdgeInsets.all(20 * 0.75),
   }) : super(key: key);

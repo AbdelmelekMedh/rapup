@@ -13,9 +13,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMixin {
 
-  VideoPlayerController _videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
   bool _isPlaying = true;
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                 itemBuilder: (BuildContext context, int index) {
                   return Stack(
                     children: <Widget>[
-                      _videoPlayerController.value.initialized
+                      _videoPlayerController.value.isInitialized
                           ? Container(
                         child: InkWell(
                             onTap: () {

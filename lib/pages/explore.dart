@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rapup/widgets/CategoriesScroller.dart';
 import 'package:rapup/widgets/carousel_loading.dart';
 import 'package:rapup/widgets/search_widget.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class Explore extends StatefulWidget {
+  const Explore({Key? key}) : super(key: key);
+
   @override
   _ExploreState createState() => _ExploreState();
 }
 
 class _ExploreState extends State<Explore> {
-
-  final CategoriesScroller categoriesScroller = CategoriesScroller();
   String query = '';
-  int _current = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      body:Stack(
-        children:<Widget> [
+      body: Stack(
+        children: <Widget>[
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -38,67 +37,81 @@ class _ExploreState extends State<Explore> {
           ),
           ListView(
             padding: EdgeInsets.zero,
-              children:<Widget> [
-                SizedBox(height: MediaQuery.of(context).size.height/10),//55
-                Center(
-                  child: Text(' Explore ',
-                    style: TextStyle(fontSize: 17),
-                  ),
+            children: <Widget>[
+              SizedBox(height: MediaQuery.of(context).size.height / 10), //55
+              const Center(
+                child: Text(
+                  ' Explore ',
+                  style: TextStyle(fontSize: 17),
                 ),
-                buildSearch(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 17, 0, 10),
-                  child: Text('#Trends'),
-                ),
-                CarouselLoading(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('#Rap_Battle'),
-                          Text('73.4 M',style: TextStyle(fontSize: 12,color: Colors.transparent.withOpacity(0.4))),
-                        ],
+              ),
+              buildSearch(),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(15, 17, 0, 10),
+                child: Text('#Trends'),
+              ),
+              const CarouselLoading(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('#Rap_Battle'),
+                        Text('73.4 M',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black.withOpacity(0.4))),
+                      ],
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width / 150), //10
+                    RatingBar.builder(
+                      initialRating: 1,
+                      minRating: 1,
+                      itemCount: 1,
+                      itemSize: 30.0,
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width /150),//10
-                      SmoothStarRating(
-                        starCount:1,
-                        color: Colors.yellow,
-                        size:30,
-                        //isReadOnly: true,
-                        borderColor: Colors.yellow,
-                        allowHalfRating: false,
-                      ),
-                    ],
-                  ),
+                      onRatingUpdate: (rating) {},
+                      ignoreGestures: true,
+                    ),
+                  ],
                 ),
-                categoriesScroller,
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('#Punchline'),
-                      Text('73.4 M',style: TextStyle(fontSize: 12,color: Colors.transparent.withOpacity(0.4))),
-                    ],
-                  ),
+              ),
+              const CategoriesScroller(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('#Punchline'),
+                    Text('73.4 M',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.4))),
+                  ],
                 ),
-                categoriesScroller,
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
-                  child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('#Performances'),
-                          Text('73.4 M',style: TextStyle(fontSize: 12,color: Colors.transparent.withOpacity(0.4))),
-                        ],
-                      ),
+              ),
+              const CategoriesScroller(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('#Performances'),
+                    Text('73.4 M',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.4))),
+                  ],
                 ),
-                categoriesScroller,
-                SizedBox(height: MediaQuery.of(context).size.height/8),//80
-              ],
+              ),
+              const CategoriesScroller(),
+              SizedBox(height: MediaQuery.of(context).size.height / 8), //80
+            ],
           ),
         ],
       ),
@@ -106,12 +119,14 @@ class _ExploreState extends State<Explore> {
   }
 
   Widget buildSearch() => SearchWidget(
-    text: query,
-    hintText: 'Search',
-    onChanged: searchvideo,
-  );
+        text: query,
+        hintText: 'Search',
+        onChanged: searchvideo,
+      );
 
   void searchvideo(String query) {
+    setState(() {
+      this.query = query;
+    });
   }
-
 }

@@ -5,7 +5,7 @@ import 'package:rapup/models/ChatMessage.dart';
 class AudioMessage extends StatelessWidget {
   final ChatMessage message;
 
-  const AudioMessage({Key key, this.message}) : super(key: key);
+  const AudioMessage({Key? key, required this.message}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

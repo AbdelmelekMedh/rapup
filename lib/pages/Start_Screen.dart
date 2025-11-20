@@ -18,9 +18,9 @@ class Start_Screen extends StatefulWidget {
 
 class _Start_ScreenState extends State<Start_Screen> with SingleTickerProviderStateMixin {
 
-  VideoPlayerController _videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
   bool _isPlaying = true;
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _Start_ScreenState extends State<Start_Screen> with SingleTickerProviderSt
         body: SlidingUpPanel(
           color: Colors.white.withOpacity(0.25),
           minHeight: MediaQuery.of(context).size.width/2.5,
-          panelBuilder: (scrollController) => buildSlidingPanel(
+          panelBuilder: (scrollController) => BuildSlidingPanel(
             scrollController: scrollController,
           ),
           borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
@@ -57,7 +57,7 @@ class _Start_ScreenState extends State<Start_Screen> with SingleTickerProviderSt
                         itemBuilder: (BuildContext context, int index) {
                           return Stack(
                             children: <Widget>[
-                              _videoPlayerController.value.initialized
+                              _videoPlayerController.value.isInitialized
                                   ? Container(
                                 child: InkWell(
                                     onTap: () {

@@ -1,36 +1,92 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rapup/user.dart';
 import 'package:http/http.dart' as http;
 
-
 class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
+
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _usernameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
 
-  String ValueGender;
-  List listGender = ["Male", "Female","Other"];
-  DateTime date ;
-  User user = User("","","",DateTime.now(),"");
+  DateTime? _selectedDate;
+  String? _selectedGender;
+  final List<String> _listGender = ["Male", "Female", "Other"];
 
-  Future save() async {
-    var res = await http.post("http://10.0.2.2:8080/api/auth/signup",
-        headers: {'Content-Type':'application/json'},
-        body: json.encode({
-          'username': user.userName,
-          'email': user.email,
-          'password': user.password,
-          'dateOfBirth': user.dateOfBierth.toIso8601String(),
-          'gender': user.gender}));
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> save() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (_selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select your date of birth')),
+      );
+      return;
+    }
+    if (_selectedGender == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select your gender')),
+      );
+      return;
+    }
+
+    final res = await http.post(
+      Uri.parse("http://10.0.2.2:8080/api/auth/signup"),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': _usernameController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+        'dateOfBirth': _selectedDate!.toIso8601String(),
+        'gender': _selectedGender,
+      }),
+    );
+
     print(res.body);
-    if (res.statusCode == 200) {
+    if (res.statusCode == 200 && mounted) {
       Navigator.of(context).pushNamed('/signin');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An error occurred. Please try again.')),
+      );
     }
   }
 
@@ -40,14 +96,14 @@ class _SignUpState extends State<SignUp> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: BackButton(),
+        leading: const BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Stack(
-        children:<Widget> [
+        children: <Widget>[
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -60,100 +116,78 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
           ),
-          Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.transparent,
-            body: Column(
+          Form(
+            key: _formKey,
+            child: Column(
               children: [
-                Flexible(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: MediaQuery.of(context).size.height/8),//100
-                      Center(
-                        child: Text('Create Account',
-                          style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: MediaQuery.of(context).size.height / 8),
+                        const Center(
+                          child: Text(
+                            'Create Account',
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      SizedBox(height:MediaQuery.of(context).size.height/20),//80
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Text('Username',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        SizedBox(height: MediaQuery.of(context).size.height / 20),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 5, bottom: 5),
+                          child: Text(
+                            'Username',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      SizedBox(height:MediaQuery.of(context).size.height/200),//5
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height/15,//50
+                        Container(
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
-                            child: TextFormField(
-                              controller: TextEditingController(text: user.userName),
-                              onChanged: (val){
-                                user.userName = val;
-                              },
-                              validator: (value){
-                                if (value.isEmpty){
-                                  return 'user name is empty';
-                                }
-                                return '';
-                              },
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                  child: Icon(
-                                    FontAwesomeIcons.user,
-                                    size: 20,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              ),
-                              style: TextStyle(color: Colors.black87),
-                              keyboardType: TextInputType.name,
-                              textInputAction: TextInputAction.next,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height/50),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Text('Your email',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(height:MediaQuery.of(context).size.height/200),//5
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height/15,//50
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: TextFormField(
-                              controller: TextEditingController(text: user.email),
-                              onChanged: (val){
-                                user.email = val;
-                              },
-                              validator: (value){
-                                if (value.isEmpty){
-                                  return 'Email is empty';
-                                }
-                                return '';
-                              },
-                              decoration: InputDecoration(
+                          child: TextFormField(
+                            controller: _usernameController,
+                            validator: (value) =>
+                                (value?.isEmpty ?? true) ? 'Username is required' : null,
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                                child: Icon(
+                                  FontAwesomeIcons.user,
+                                  size: 20,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                            style: const TextStyle(color: Colors.black87),
+                            keyboardType: TextInputType.name,
+                            textInputAction: TextInputAction.next,
+                          ),
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.height / 50),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 5, bottom: 5),
+                          child: Text(
+                            'Your email',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextFormField(
+                            controller: _emailController,
+                            validator: (value) =>
+                                (value?.isEmpty ?? true) ? 'Email is required' : null,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              prefixIcon: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
                                 child: Icon(
                                   FontAwesomeIcons.envelope,
                                   size: 20,
@@ -161,45 +195,33 @@ class _SignUpState extends State<SignUp> {
                                 ),
                               ),
                             ),
-                              style: TextStyle(color: Colors.black87),
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                            ),
+                            style: const TextStyle(color: Colors.black87),
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height/50),//20
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Text('Create a password',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        SizedBox(height: MediaQuery.of(context).size.height / 50),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 5, bottom: 5),
+                          child: Text(
+                            'Create a password',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height/200),//5
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height/15,//50
+                        Container(
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
-                            child: TextFormField(
-                              controller: TextEditingController(text: user.password),
-                              onChanged: (val){
-                                user.password = val;
-                              },
-                              validator: (value){
-                                if (value.isEmpty){
-                                  return 'Email is empty';
-                                }
-                                return '';
-                              },
-                              decoration: InputDecoration(
+                          child: TextFormField(
+                            controller: _passwordController,
+                            validator: (value) => (value?.isEmpty ?? true)
+                                ? 'Password is required'
+                                : null,
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
                                 child: Icon(
                                   FontAwesomeIcons.lock,
                                   size: 20,
@@ -207,188 +229,124 @@ class _SignUpState extends State<SignUp> {
                                 ),
                               ),
                             ),
-                              obscureText: true,
-                              style: TextStyle(color: Colors.black87,fontSize: 25),
-                              keyboardType: TextInputType.name,
-                              textInputAction: TextInputAction.done,
-                            ),
+                            obscureText: true,
+                            style: const TextStyle(
+                                color: Colors.black87, fontSize: 25),
+                            textInputAction: TextInputAction.done,
                           ),
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height/50),//20
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        SizedBox(height: MediaQuery.of(context).size.height / 50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: Text('Data of birth',style: TextStyle(fontWeight: FontWeight.bold),),
-                                  ),
-                                  SizedBox(height: MediaQuery.of(context).size.height/150),//10
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white,width: 1),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5, bottom: 5),
+                                  child: Text('Date of birth',
+                                      style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                                TextButton(
+                                  onPressed: () => _selectDate(context),
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(color: Colors.white),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    child: FlatButton(
-                                      onPressed: (){
-                                        setState(() {
-                                          SelectDate(context);
-                                          user.dateOfBierth = date;
-                                        });
-                                      },
-                                      color: Colors.transparent,
-                                      child: Row(
-                                        children: [
-                                          Text( date == null ? 'Date picker' : ' ${date.year}/${date.month}/${date.day} ',
-                                            style: TextStyle(color: Colors.black54,fontSize: 15),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 5),
-                                            child: Icon(FontAwesomeIcons.angleDown,color: Colors.white,),
-                                          ),
-                                        ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        _selectedDate == null
+                                            ? 'Select Date'
+                                            : '${_selectedDate!.toLocal()}'
+                                                .split(' ')[0],
+                                        style: const TextStyle(
+                                            color: Colors.black54, fontSize: 15),
                                       ),
-                                    ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 5),
+                                        child: Icon(
+                                          FontAwesomeIcons.angleDown,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: Text('Gender',style: TextStyle(fontWeight: FontWeight.bold),),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5, bottom: 5),
+                                  child: Text('Gender',
+                                      style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(left: 16, right: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
-                                  SizedBox(height: MediaQuery.of(context).size.height/150),//10
-                                  Container(
-                                    padding: EdgeInsets.only(left: 16,right: 10),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white,width: 1),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: DropdownButton(
-                                      hint: Text('Gender selector'),
-                                      dropdownColor: Colors.white.withOpacity(0.5),
-                                      icon: Icon(FontAwesomeIcons.angleDown,color: Colors.white,),
-                                      iconSize: 30,
-                                      //isExpanded: true,
-                                      underline: SizedBox(),
-                                      style: TextStyle(color: Colors.black87,fontSize: 15),
-                                      value: ValueGender,
-                                      onChanged: (newValue){
-                                        setState(() {
-                                          ValueGender = newValue;
-                                          user.gender = newValue;
-                                        });
-                                      },
-                                      items: listGender.map((e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(e),
-                                      )
-                                      ).toList(),
-                                    ),
+                                  child: DropdownButton<String>(
+                                    hint: const Text('Select Gender'),
+                                    dropdownColor: Colors.white.withOpacity(0.8),
+                                    icon: const Icon(FontAwesomeIcons.angleDown,
+                                        color: Colors.white),
+                                    iconSize: 30,
+                                    underline: const SizedBox(),
+                                    style: const TextStyle(
+                                        color: Colors.black87, fontSize: 15),
+                                    value: _selectedGender,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _selectedGender = newValue;
+                                      });
+                                    },
+                                    items: _listGender
+                                        .map((e) => DropdownMenuItem(
+                                              value: e,
+                                              child: Text(e),
+                                            ))
+                                        .toList(),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height/20),//40
-                      Center(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width/3,//180
-                          height:MediaQuery.of(context).size.height/15,//45
-                          child: FlatButton(
-                            onPressed: (){
-                              if(user.userName == ""){
-                                return Fluttertoast.showToast(
-                                    msg: "check your user name",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black54,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0);
-                              }if (user.email == ""){
-                                return Fluttertoast.showToast(
-                                    msg: "check your email",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black54,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0
-                                );
-                              } if(user.password == ""){
-                                Fluttertoast.showToast(
-                                    msg: "check your password",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black54,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0
-                                );
-                              } if (user.dateOfBierth == DateTime.now()){
-                                Fluttertoast.showToast(
-                                    msg: "select yor date of birth",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black54,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0
-                                );
-                              } if (user.gender == ""){
-                                Fluttertoast.showToast(
-                                    msg: "select your gender",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black54,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0
-                                );
-                              } return save();
-                            },
-                            color: Colors.transparent,
-                            shape:
-                            RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.white, width: 2),
-                              borderRadius: BorderRadius.all(Radius.circular(30),),
+                        SizedBox(height: MediaQuery.of(context).size.height / 20),
+                        Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 2.5,
+                            height: MediaQuery.of(context).size.height / 15,
+                            child: ElevatedButton(
+                              onPressed: save,
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                          color: Colors.white, width: 2),
+                                      borderRadius: BorderRadius.circular(30))),
+                              child: const Text(
+                                'SIGN UP',
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
+                              ),
                             ),
-                            child: Text('DONE',style: TextStyle(fontSize: 18,color: Colors.white),),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
                 ),
-                Center(
-                  child:
-                  Column(
-                    children: [
-                      Text('By clicking on "Sign up", you accept the ',
-                        style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white.withOpacity(0.5)),
-                      ),
-                      Text(' Terms and Conditions of Use',
-                        style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white.withOpacity(1),decoration: TextDecoration.underline),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height/80),//40
               ],
             ),
           ),
@@ -396,47 +354,4 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
-  Future<Null> SelectDate (BuildContext context) async{
-    DateTime datePicker = await showDatePicker(
-        context: context,
-        initialDate: date == null ? DateTime.now() : date,
-        firstDate: DateTime(1947),
-        lastDate: DateTime.now(),
-        //initialDatePickerMode: DatePickerMode.year,
-        //selectableDayPredicate: (DateTime val) => val.weekday == 6 || val.weekday == 7 ? false : true,
-        builder: (BuildContext context,Widget child){
-          return Theme(
-              data: ThemeData(
-                primarySwatch:  buttonColor,
-                primaryColor: Colors.black54,
-                accentColor: Color(0xFFE7680D),
-              ),
-              child: child
-          );
-        }
-    );
-
-    user.dateOfBierth = datePicker;
-    print(user.dateOfBierth.toString());
-
-    if(datePicker != null && datePicker != date){
-      setState(() {
-        date = datePicker;
-        print(date.toString());
-      });
-    }
-  }
 }
-
-const MaterialColor buttonColor = MaterialColor(0xFFE7680D, <int, Color>{
-  50: Color(0xFFE7680D),
-  100: Color(0xFFE7680D),
-  200: Color(0xFFE7680D),
-  300: Color(0xFFE7680D),
-  400: Color(0xFFE7680D),
-  500: Color(0xFFE7680D),
-  600: Color(0xFFE7680D),
-  700: Color(0xFFE7680D),
-  800: Color(0xFFE7680D),
-  900: Color(0xFFE7680D),
-});

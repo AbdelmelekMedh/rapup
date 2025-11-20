@@ -1,9 +1,25 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rapup/components/message/chat_input_field.dart';
 import 'package:rapup/components/message/message.dart';
 import 'package:rapup/models/ChatMessage.dart';
 
-class MessageBody extends StatelessWidget {
+class MessageBody extends StatefulWidget {
+  const MessageBody({Key? key}) : super(key: key);
+
+  @override
+  State<MessageBody> createState() => _MessageBodyState();
+}
+
+class _MessageBodyState extends State<MessageBody> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -14,11 +30,14 @@ class MessageBody extends StatelessWidget {
             child: ListView.builder(
               itemCount: demeChatMessages.length,
               itemBuilder: (context, index) =>
-                  Message(message: demeChatMessages[index]),
+                  Message(message: demeChatMessages[index] as ChatMessage),
             ),
           ),
         ),
-        ChatInputField(),
+        ChatInputField(
+          controller: _controller,
+          onPressed: () {},
+        ),
       ],
     );
   }

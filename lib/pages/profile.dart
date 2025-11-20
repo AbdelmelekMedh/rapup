@@ -2,41 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapup/common/utils.dart';
-import 'package:rapup/models/login_model.dart';
 import 'package:rapup/services/shared_service.dart';
-import 'package:rapup/user.dart';
 import 'package:rapup/widgets/app_bar.dart';
 import 'package:rapup/widgets/profile_tab_bar.dart';
 import 'package:rapup/widgets/profile_widgets.dart';
 
-
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   int _pageIndex = 0;
-  LoginResponseModel logResModel;
-
 
   @override
   Widget build(BuildContext context) {
-
-    var _screen = MediaQuery.of(context).size;
-
+    final _screen = MediaQuery.of(context).size;
+    final isStaggered = _pageIndex == 1;
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: RapupAppBar(
         backgroundColor: Colors.black26,
-        height: MediaQuery.of(context).size.height/10,
+        height: MediaQuery.of(context).size.height / 10,
+        leading: const SizedBox.shrink(),
         center: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Text(
               'Abdelmelek Medhioub',
               style: TextStyle(
@@ -52,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         trailing: IconButton(
-          icon: Icon(
+          icon: const Icon(
             FontAwesomeIcons.signOutAlt,
             color: Colors.white,
           ),
@@ -73,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    bio(context,"melek"),
+                    bio(context, "melek"),
                     editProfile(context),
                   ],
                 ),
@@ -81,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             follow(screen: _screen),
             ProfileTabBar(
-              height: MediaQuery.of(context).size.height/8,
+              height: MediaQuery.of(context).size.height / 8,
               onTap: (value) {
                 setState(() {
                   _pageIndex = value;
@@ -89,31 +83,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             StaggeredGridView.countBuilder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              crossAxisCount: _pageIndex != 1 ? 3 : 2,
+              crossAxisCount: isStaggered ? 2 : 3,
               itemCount: Utils.listOfImageUrl.length,
-              itemBuilder: (contex, index) {
+              itemBuilder: (context, index) {
                 return Container(
                   padding:
-                  _pageIndex == 1 ? EdgeInsets.all(5) : EdgeInsets.all(0),
+                      isStaggered ? const EdgeInsets.all(5) : EdgeInsets.zero,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ClipRRect(
-                    borderRadius: _pageIndex == 1
+                    borderRadius: isStaggered
                         ? BorderRadius.circular(15)
-                        : BorderRadius.circular(0),
-                    child: Image(
+                        : BorderRadius.zero,
+                    child: Image.network(
+                      Utils.listOfImageUrl.elementAt(index),
                       fit: BoxFit.cover,
-                      image:
-                      NetworkImage(Utils.listOfImageUrl.elementAt(index)),
                     ),
                   ),
                 );
               },
-              staggeredTileBuilder: (index) => StaggeredTile.count(
-                  _pageIndex != 1 ? 1 : 1, _pageIndex != 1 ? 1 : 1.5),
+              staggeredTileBuilder: (index) =>
+                  StaggeredTile.count(1, isStaggered ? 1.0 : 1.5),
               crossAxisSpacing: 2,
               mainAxisSpacing: 2,
             ),

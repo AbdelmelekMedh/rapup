@@ -9,9 +9,9 @@ class ChatMessage {
 
   ChatMessage({
     this.text = '',
-    this.messageType,
-    this.messageStatus,
-    this.isSender,
+    required this.messageType,
+    required this.messageStatus,
+    required this.isSender,
   });
 }
 

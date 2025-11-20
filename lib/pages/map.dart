@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rapup/widgets/app_bar.dart';
-import 'package:switch_it/switch_it.dart';
 
 class MapScreen extends StatefulWidget {
+  const MapScreen({Key? key}) : super(key: key);
+
   @override
   _MapScreenState createState() => _MapScreenState();
 }
@@ -14,12 +15,12 @@ class _MapScreenState extends State<MapScreen> {
     zoom: 11.5,
   );
 
-  GoogleMapController _googleMapController;
+  GoogleMapController? _googleMapController;
   bool isEnabled1 = false;
 
   @override
   void dispose() {
-    _googleMapController.dispose();
+    _googleMapController?.dispose();
     super.dispose();
   }
 
@@ -30,19 +31,14 @@ class _MapScreenState extends State<MapScreen> {
       extendBodyBehindAppBar: true,
       appBar: RapupAppBar(
         backgroundColor: Colors.transparent,
-        height: MediaQuery.of(context).size.height/10,
-        leading: BackButton(color: Colors.black45),
-        center: null,
-        trailing: SwitchIt(
-          isEnabled: isEnabled1,
-          backgroundColor: Colors.transparent,
-          inActiveColor: Colors.red,
-          activeColor: Colors.green,
-          color: Colors.black45,
-          size: 60,
+        height: MediaQuery.of(context).size.height / 10,
+        leading: const BackButton(color: Colors.black45),
+        center: const SizedBox.shrink(),
+        trailing: Switch(
+          value: isEnabled1,
           onChanged: (value) {
             setState(() {
-              isEnabled1 = !isEnabled1;
+              isEnabled1 = value;
             });
           },
         ),
@@ -52,9 +48,7 @@ class _MapScreenState extends State<MapScreen> {
         zoomControlsEnabled: false,
         initialCameraPosition: _initialCameraPosition,
         onMapCreated: (controller) => _googleMapController = controller,
-        //onLongPress: _addMarker,
       ),
     );
   }
-
 }

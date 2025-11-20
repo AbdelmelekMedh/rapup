@@ -8,7 +8,7 @@ import 'package:rapup/widgets/profile_widgets.dart';
 
 
 class FriendProfile extends StatefulWidget {
-  const FriendProfile({Key key}) : super(key: key);
+  const FriendProfile({Key? key}) : super(key: key);
 
   @override
   _FriendProfileState createState() => _FriendProfileState();

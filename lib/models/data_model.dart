@@ -1,5 +1,4 @@
-
-class DataModel{
+class DataModel {
   final String name;
   final String likesCount;
   final String messagesCount;
@@ -9,5 +8,14 @@ class DataModel{
   final String musicName;
   final String profileUrl;
 
-  DataModel({this.name, this.likesCount, this.messagesCount, this.forwardCount, this.description, this.tags, this.musicName,this.profileUrl});
+  const DataModel({
+    required this.name,
+    required this.likesCount,
+    required this.messagesCount,
+    required this.forwardCount,
+    required this.description,
+    required this.tags,
+    required this.musicName,
+    required this.profileUrl,
+  });
 }

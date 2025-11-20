@@ -5,25 +5,32 @@ import 'package:rapup/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedService {
-  static Future<bool> isloggedIn()async {
+  static Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("login_details") != null ? true : false ;
+    return prefs.containsKey("login_details");
   }
 
-  static Future<void> setLoginDetails(LoginResponseModel logResModel) async {
+  static Future<void> setLoginDetails(LoginResponseModel? logResModel) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString("login_details", logResModel != null ? jsonEncode(logResModel.toJson()) : null);
+    if (logResModel != null) {
+      await prefs.setString("login_details", jsonEncode(logResModel.toJson()));
+    } else {
+      await prefs.remove("login_details");
+    }
   }
 
-  static Future<LoginResponseModel> loginDetails()async {
+  static Future<LoginResponseModel?> loginDetails() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("login_details") != null
-        ? LoginResponseModel.fromJson(jsonDecode(prefs.getString("login_details")))
-        : null;
+    final jsonString = prefs.getString("login_details");
+    if (jsonString != null) {
+      return LoginResponseModel.fromJson(jsonDecode(jsonString));
+    }
+    return null;
   }
 
   static Future<void> logout(BuildContext context) async {
     await setLoginDetails(null);
-    Navigator.of(context).pushNamed('/');
+    // Use pushNamedAndRemoveUntil to clear the navigation stack.
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 }

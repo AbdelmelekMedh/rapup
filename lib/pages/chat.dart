@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/components/chat/chatbody.dart';
+import 'package:rapup/components/chat/chatbody.dart';
 
 
 

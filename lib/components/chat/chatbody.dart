@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rapup/components/chat/chatCard.dart';
 import 'package:rapup/components/filled_outline_button.dart';
 import 'package:rapup/models/ChatsData.dart';
 import 'package:rapup/pages/message_screen.dart';
-import 'file:///C:/Users/anasm/AndroidStudioProjects/rapup/lib/components/chat/chatCard.dart';
 
 class ChatBody extends StatelessWidget {
   @override

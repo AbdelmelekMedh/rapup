@@ -3,20 +3,27 @@ import 'package:flutter/material.dart';
 
 class ChatInputField extends StatelessWidget {
   const ChatInputField({
-    Key key,
+    Key? key,
+    required this.controller,
+    required this.onPressed,
   }) : super(key: key);
+
+  final TextEditingController controller;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.64);
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20/2),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.transparent,
-        boxShadow:[
+        boxShadow: [
           BoxShadow(
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
             blurRadius: 32,
-            color: Color(0xFF087949).withOpacity(0.08),
+            color: const Color(0xFF087949).withOpacity(0.08),
           ),
         ],
       ),
@@ -25,7 +32,7 @@ class ChatInputField extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 20 * 0.75,
                 ),
                 decoration: BoxDecoration(
@@ -36,12 +43,13 @@ class ChatInputField extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.sentiment_satisfied_alt_outlined,
-                      color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.64),
+                      color: iconColor,
                     ),
-                    SizedBox(width: 20/4),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: controller,
+                        decoration: const InputDecoration(
                           hintText: "Type message",
                           border: InputBorder.none,
                         ),
@@ -49,34 +57,26 @@ class ChatInputField extends StatelessWidget {
                     ),
                     Icon(
                       Icons.attach_file,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color
-                          .withOpacity(0.64),
+                      color: iconColor,
                     ),
-                    SizedBox(width: 20 / 4),
+                    const SizedBox(width: 5),
                     Icon(
                       Icons.camera_alt_outlined,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color
-                          .withOpacity(0.64),
+                      color: iconColor,
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(width: 20),
-            Container(
-              width: MediaQuery.of(context).size.width/10,
-              height: MediaQuery.of(context).size.height/16,
+            const SizedBox(width: 20),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 10,
+              height: MediaQuery.of(context).size.height / 16,
               child: FloatingActionButton(
                 heroTag: "mic",
                 backgroundColor: Colors.blueGrey,
-                onPressed: (){},
-                child: Icon(Icons.mic, color: Colors.white),
+                onPressed: onPressed,
+                child: const Icon(Icons.mic, color: Colors.white),
               ),
             ),
           ],
