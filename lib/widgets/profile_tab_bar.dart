@@ -20,8 +20,8 @@ class ProfileTabBar extends StatefulWidget implements PreferredSizeWidget {
 class _ProfileTabBarState extends State<ProfileTabBar> {
   int _currentIndex = 0;
 
-  final Color _selectedColor = Colors.white;
-  final Color _unSelectedColor = Colors.white30;
+  final Color _selectedColor = Colors.black;
+  final Color _unSelectedColor = Colors.black54;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,6 @@ class _ProfileTabBarState extends State<ProfileTabBar> {
         }
       },
       child: Container(
-        color: Colors.black,
         width: MediaQuery.of(context).size.width / 3,
         height: widget.height,
         child: Stack(
@@ -68,7 +67,7 @@ class _ProfileTabBarState extends State<ProfileTabBar> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 2,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
           ],

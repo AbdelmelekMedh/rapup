@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rapup/pages/Start_Screen.dart';
+import 'package:rapup/pages/edit_profile.dart';
 import 'package:rapup/pages/friendProfile.dart';
 import 'package:rapup/pages/home.dart';
 import 'package:rapup/pages/map.dart';
@@ -25,6 +26,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => FriendProfile());
       case '/map':
         return MaterialPageRoute(builder: (_) => MapScreen());
+      case '/editProfile':
+        return MaterialPageRoute(builder: (_) => EditProfile());
 
       default:
         return _errorRoute();

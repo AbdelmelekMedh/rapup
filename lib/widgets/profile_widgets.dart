@@ -4,7 +4,6 @@ import 'package:rapup/common/utils.dart';
 Widget profileStats() {
   return Container(
     padding: const EdgeInsets.only(left: 10, right: 10),
-    color: Colors.black,
     height: 100,
     child: Row(
       children: <Widget>[
@@ -39,9 +38,8 @@ Widget follow({Size? screen}) {
   );
 }
 
-Widget bio(BuildContext context, String username) {
+Widget bio(BuildContext context, String username, String bioContent) {
   return Container(
-    color: Colors.black,
     width: MediaQuery.of(context).size.width -
         MediaQuery.of(context).size.width / 3,
     height: MediaQuery.of(context).size.height / 10,
@@ -51,13 +49,13 @@ Widget bio(BuildContext context, String username) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          '@$username',
+          '$username',
           style: const TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16),
         ),
-        const Text(
-          'Weekend rockclimber and and sketching enthusiast',
-          style: TextStyle(color: Colors.white70),
+        Text(
+          '$bioContent',
+          style: const TextStyle(color: Colors.black),
         ),
       ],
     ),
@@ -66,23 +64,23 @@ Widget bio(BuildContext context, String username) {
 
 Widget editProfile(BuildContext context) {
   return Container(
-    color: Colors.black,
     child: Container(
       height: 25,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[500]!),
         borderRadius: BorderRadius.circular(5),
-        color: Colors.cyanAccent,
+        color: Colors.black,
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed('/editProfile');
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
         child: const Text(
           'Edit Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
     ),
@@ -153,11 +151,11 @@ Widget statsBox({
         Text(
           count,
           style: const TextStyle(
-              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+              fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         Text(
           title,
-          style: const TextStyle(fontSize: 14, color: Colors.white70),
+          style: const TextStyle(fontSize: 14, color: Colors.black),
         ),
       ],
     ),

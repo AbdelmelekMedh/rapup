@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:rapup/api/sign_up_api.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -16,10 +16,6 @@ class _SignUpState extends State<SignUp> {
   late final TextEditingController _usernameController;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
-
-  DateTime? _selectedDate;
-  String? _selectedGender;
-  final List<String> _listGender = ["Male", "Female", "Other"];
 
   @override
   void initState() {
@@ -37,56 +33,35 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
-
   Future<void> save() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select your date of birth')),
-      );
-      return;
-    }
-    if (_selectedGender == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select your gender')),
-      );
-      return;
-    }
 
-    final res = await http.post(
-      Uri.parse("http://10.0.2.2:8080/api/auth/signup"),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'username': _usernameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
-        'dateOfBirth': _selectedDate!.toIso8601String(),
-        'gender': _selectedGender,
-      }),
+    final res = await SignUpApi.signUp(
+      _usernameController.text,
+      _emailController.text,
+      _passwordController.text,
     );
 
     print(res.body);
     if (res.statusCode == 200 && mounted) {
       Navigator.of(context).pushNamed('/signin');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An error occurred. Please try again.')),
-      );
+    } else if (mounted) {
+      final body = json.decode(res.body);
+      final errors = body['errors'];
+      if (errors != null && errors is Map) {
+        final messages =
+            errors.values.expand((e) => e as List).join('\n');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(messages)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(body['message'] ?? 'An unknown error occurred.')),
+        );
+      }
     }
   }
 
@@ -118,9 +93,7 @@ class _SignUpState extends State<SignUp> {
           ),
           Form(
             key: _formKey,
-            child: Column(
-              children: [
-                Expanded(
+            child: Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
@@ -235,91 +208,6 @@ class _SignUpState extends State<SignUp> {
                             textInputAction: TextInputAction.done,
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height / 50),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5, bottom: 5),
-                                  child: Text('Date of birth',
-                                      style: TextStyle(fontWeight: FontWeight.bold)),
-                                ),
-                                TextButton(
-                                  onPressed: () => _selectDate(context),
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    shape: RoundedRectangleBorder(
-                                      side: const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        _selectedDate == null
-                                            ? 'Select Date'
-                                            : '${_selectedDate!.toLocal()}'
-                                                .split(' ')[0],
-                                        style: const TextStyle(
-                                            color: Colors.black54, fontSize: 15),
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 5),
-                                        child: Icon(
-                                          FontAwesomeIcons.angleDown,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5, bottom: 5),
-                                  child: Text('Gender',
-                                      style: TextStyle(fontWeight: FontWeight.bold)),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(left: 16, right: 10),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: DropdownButton<String>(
-                                    hint: const Text('Select Gender'),
-                                    dropdownColor: Colors.white.withOpacity(0.8),
-                                    icon: const Icon(FontAwesomeIcons.angleDown,
-                                        color: Colors.white),
-                                    iconSize: 30,
-                                    underline: const SizedBox(),
-                                    style: const TextStyle(
-                                        color: Colors.black87, fontSize: 15),
-                                    value: _selectedGender,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        _selectedGender = newValue;
-                                      });
-                                    },
-                                    items: _listGender
-                                        .map((e) => DropdownMenuItem(
-                                              value: e,
-                                              child: Text(e),
-                                            ))
-                                        .toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
                         SizedBox(height: MediaQuery.of(context).size.height / 20),
                         Center(
                           child: SizedBox(
@@ -342,13 +230,10 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
           ),
         ],
       ),

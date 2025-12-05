@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/api/sign_in_api.dart';
 import 'package:rapup/models/login_model.dart';
 import 'package:rapup/services/shared_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:rapup/widgets/showMessage.dart';
 
 class SignIn extends StatefulWidget {
@@ -38,33 +38,22 @@ class _SignInState extends State<SignIn> {
       return;
     }
 
-    final res = await http.post(
-      Uri.parse("http://10.0.2.2:8080/api/auth/signin"),
-      headers: <String, String>{'Content-Type': 'application/json'},
-      body: json.encode(<String, String>{
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-      }),
+    final res = await SignInApi.signIn(
+      _usernameController.text,
+      _passwordController.text,
     );
 
     if (res.statusCode == 200) {
       LoginResponseModel logResModel = loginResponseModelFromJson(res.body);
-      if (logResModel.message.isEmpty) {
+      if (logResModel.token.isNotEmpty) {
         await SharedService.setLoginDetails(logResModel);
         if (mounted) {
           Navigator.of(context).pushNamed('/home', arguments: logResModel);
         }
-      } else {
-        if (mounted) {
-          showMessage(context, "Login Error", logResModel.message, "OK",
-              () => Navigator.of(context).pop());
-        }
       }
     } else {
-      if (mounted) {
-        showMessage(context, "Login Error", "Invalid username or password", "OK",
-            () => Navigator.of(context).pop());
-      }
+      showMessage(context, "Login Error", "Invalid username or password", "OK",
+              () => Navigator.of(context).pop());
     }
   }
 

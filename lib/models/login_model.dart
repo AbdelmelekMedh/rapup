@@ -7,46 +7,42 @@ String loginResponseModelToJson(LoginResponseModel data) =>
     json.encode(data.toJson());
 
 class LoginResponseModel {
+  final String refreshToken;
   final String id;
   final String username;
   final String email;
-  final String accessToken;
-  final String tokenType;
-  final String message;
-  final String gender;
-  final String dateOfBirth;
+  final List<String> roles;
+  final String token;
+  final String type;
 
   const LoginResponseModel({
+    required this.refreshToken,
     required this.id,
     required this.username,
     required this.email,
-    required this.accessToken,
-    required this.tokenType,
-    required this.message,
-    required this.gender,
-    required this.dateOfBirth,
+    required this.roles,
+    required this.token,
+    required this.type,
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
       LoginResponseModel(
-        id: json["id"] ?? "",
-        username: json["username"] ?? "",
-        email: json["email"] ?? "",
-        accessToken: json["accessToken"] ?? "",
-        tokenType: json["tokenType"] ?? "",
-        message: json["message"] ?? "",
-        gender: json["gender"] ?? "",
-        dateOfBirth: json["dateOfBirth"] ?? "",
+        refreshToken: json["refreshToken"],
+        id: json["id"],
+        username: json["username"],
+        email: json["email"],
+        roles: List<String>.from(json["roles"].map((x) => x)),
+        token: json["token"],
+        type: json["type"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "username": username,
-        "email": email,
-        "accessToken": accessToken,
-        "tokenType": tokenType,
-        "message": message,
-        "gender": gender,
-        "dateOfBirth": dateOfBirth,
-      };
+    "refreshToken": refreshToken,
+    "id": id,
+    "username": username,
+    "email": email,
+    "roles": List<dynamic>.from(roles.map((x) => x)),
+    "token": token,
+    "type": type,
+  };
 }

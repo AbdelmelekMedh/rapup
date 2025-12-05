@@ -18,7 +18,6 @@ class _FriendProfileState extends State<FriendProfile> {
   int _pageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    //LoginResponseModel logResModel;
     var _screen = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -27,22 +26,13 @@ class _FriendProfileState extends State<FriendProfile> {
         backgroundColor: Colors.black26,
         height: MediaQuery.of(context).size.height/10,
         leading: BackButton(color: Colors.white),
-        center: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Abdelmelek Medhioub',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white,
-            ),
-          ],
+        center: Text(
+          '@mohsen',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         trailing: IconButton(
           icon: Icon(
@@ -64,7 +54,7 @@ class _FriendProfileState extends State<FriendProfile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    bio(context,"mohsen"),
+                    bio(context,"mohsen Medhioub","bio aymawdhou3"),
                     Row(
                       children: [
                         followProfile(),SizedBox(width: MediaQuery.of(context).size.width/100),messageProfile(),

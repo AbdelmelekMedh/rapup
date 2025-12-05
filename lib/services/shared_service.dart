@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:rapup/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/logout_api.dart';
+
 class SharedService {
   static Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
@@ -29,8 +31,11 @@ class SharedService {
   }
 
   static Future<void> logout(BuildContext context) async {
-    await setLoginDetails(null);
-    // Use pushNamedAndRemoveUntil to clear the navigation stack.
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    final details = await loginDetails();
+    if (details != null) {
+      await LogoutApi.logout(details.id);
+      await setLoginDetails(null);
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    }
   }
 }

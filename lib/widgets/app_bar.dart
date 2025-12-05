@@ -23,12 +23,13 @@ class RapupAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       padding: const EdgeInsets.only(top: 20),
       height: height,
-      color: backgroundColor ?? Theme.of(context).primaryColor,
+      color: backgroundColor ?? Colors.transparent,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
             child: Align(
               alignment: Alignment.centerLeft,
               child: leading,
@@ -36,6 +37,7 @@ class RapupAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Expanded(
             child: Align(
+              alignment: Alignment.centerLeft,
               child: center,
             ),
           ),

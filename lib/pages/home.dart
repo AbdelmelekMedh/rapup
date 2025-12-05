@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/api/profile_api.dart';
+import 'package:rapup/models/login_model.dart';
 import 'package:rapup/pages/chat.dart';
 import 'package:rapup/pages/dashboard.dart';
 import 'package:rapup/pages/explore.dart';
 import 'package:rapup/pages/profile.dart';
+import 'package:rapup/services/shared_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const appId = "3eb392d796b64b558fa2e0922dd494bc";
 
@@ -14,7 +18,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
 
   int currentTab = 0;
   final List<Widget> screens = [
@@ -43,7 +46,9 @@ class _HomeState extends State<Home> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Image.asset('assets/images/playlist.png'),
-        onPressed: (){},
+        onPressed: (){
+          Navigator.of(context).pushNamed('/Map');
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
