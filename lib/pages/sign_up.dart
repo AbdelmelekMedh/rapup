@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapup/api/sign_up_api.dart';
+import 'package:rapup/widgets/gradient_container.dart';
+import 'package:rapup/widgets/text_widget.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -46,7 +48,7 @@ class _SignUpState extends State<SignUp> {
 
     print(res.body);
     if (res.statusCode == 200 && mounted) {
-      Navigator.of(context).pushNamed('/signin');
+      Navigator.of(context).pushNamed('/signIn');
     } else if (mounted) {
       final body = json.decode(res.body);
       final errors = body['errors'];
@@ -77,23 +79,12 @@ class _SignUpState extends State<SignUp> {
       ),
       body: Stack(
         children: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFF3F2F2),
-                  Color(0xFFF93B3B),
-                  Color(0xFFE7680D),
-                  Color(0xFF8B7C71),
-                ],
-              ),
-            ),
-          ),
+          const GradientContainer(),
           Form(
             key: _formKey,
-            child: Expanded(
+            child: Column(
+              children:[
+                Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
@@ -108,105 +99,34 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height / 20),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 5, bottom: 5),
-                          child: Text(
-                            'Username',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                        TextWidget(
+                          controller: _usernameController,
+                          label: 'Username',
+                          icon: FontAwesomeIcons.user,
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          validator: (value) =>
+                              (value?.isEmpty ?? true) ? 'Username is required' : null,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextFormField(
-                            controller: _usernameController,
-                            validator: (value) =>
-                                (value?.isEmpty ?? true) ? 'Username is required' : null,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              prefixIcon: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Icon(
-                                  FontAwesomeIcons.user,
-                                  size: 20,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ),
-                            style: const TextStyle(color: Colors.black87),
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                          ),
+                        TextWidget(
+                          controller: _emailController,
+                          label: 'Your email',
+                          icon: FontAwesomeIcons.envelope,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          validator: (value) =>
+                              (value?.isEmpty ?? true) ? 'Email is required' : null,
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height / 50),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 5, bottom: 5),
-                          child: Text(
-                            'Your email',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextFormField(
-                            controller: _emailController,
-                            validator: (value) =>
-                                (value?.isEmpty ?? true) ? 'Email is required' : null,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              prefixIcon: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Icon(
-                                  FontAwesomeIcons.envelope,
-                                  size: 20,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ),
-                            style: const TextStyle(color: Colors.black87),
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        SizedBox(height: MediaQuery.of(context).size.height / 50),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 5, bottom: 5),
-                          child: Text(
-                            'Create a password',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextFormField(
-                            controller: _passwordController,
-                            validator: (value) => (value?.isEmpty ?? true)
-                                ? 'Password is required'
-                                : null,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              prefixIcon: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Icon(
-                                  FontAwesomeIcons.lock,
-                                  size: 20,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ),
-                            obscureText: true,
-                            style: const TextStyle(
-                                color: Colors.black87, fontSize: 25),
-                            textInputAction: TextInputAction.done,
-                          ),
+                        TextWidget(
+                          controller: _passwordController,
+                          label: 'Create a password',
+                          icon: FontAwesomeIcons.lock,
+                          obscureText: true,
+                          keyboardType: TextInputType.visiblePassword,
+                          textInputAction: TextInputAction.done,
+                          validator: (value) => (value?.isEmpty ?? true)
+                              ? 'Password is required'
+                              : null,
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height / 20),
                         Center(
@@ -234,6 +154,8 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
+              ]
+            ),
           ),
         ],
       ),

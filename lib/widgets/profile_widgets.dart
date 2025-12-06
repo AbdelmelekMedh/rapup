@@ -1,5 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapup/common/utils.dart';
+import 'package:rapup/pages/profile.dart';
+
+
+Widget profileImage(String imageProfile) {
+  return Container(
+    padding: const EdgeInsets.only(left: 10, right: 10),
+    height: 100,
+    width: 120,
+    child: CircleAvatar(
+          radius: 80,
+          backgroundImage: NetworkImage(imageProfile), // Placeholder image
+        ),
+  );
+}
 
 Widget profileStats() {
   return Container(
@@ -62,7 +77,7 @@ Widget bio(BuildContext context, String username, String bioContent) {
   );
 }
 
-Widget editProfile(BuildContext context) {
+Widget editProfileButton(String text, VoidCallback onPressed) {
   return Container(
     child: Container(
       height: 25,
@@ -71,15 +86,13 @@ Widget editProfile(BuildContext context) {
         color: Colors.black,
       ),
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/editProfile');
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        child: const Text(
-          'Edit Profile',
+        child: Text(
+          text,
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),

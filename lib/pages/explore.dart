@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rapup/widgets/CategoriesScroller.dart';
 import 'package:rapup/widgets/carousel_loading.dart';
+import 'package:rapup/widgets/gradient_container.dart';
 import 'package:rapup/widgets/search_widget.dart';
 
 class Explore extends StatefulWidget {
@@ -21,20 +22,7 @@ class _ExploreState extends State<Explore> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFF3F2F2),
-                  Color(0xFFF93B3B),
-                  Color(0xFFE7680D),
-                  Color(0xFF8B7C71),
-                ],
-              ),
-            ),
-          ),
+          GradientContainer(),
           ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[

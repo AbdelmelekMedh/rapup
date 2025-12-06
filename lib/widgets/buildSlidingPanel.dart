@@ -90,7 +90,7 @@ class BuildSlidingPanel extends StatelessWidget {
                       onPressed: () {
                         //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
                         Navigator.of(context).pushNamed(
-                          '/signup',
+                          '/signUp',
                         );
                         print('button Mail');
                       },
@@ -136,7 +136,7 @@ class BuildSlidingPanel extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           //Navigator.push(context, new MaterialPageRoute(builder: (context) => SignIn()));
-                          Navigator.of(context).pushNamed('/signin');
+                          Navigator.of(context).pushNamed('/signIn');
                           print("log in");
                         },
                         child: const Text(

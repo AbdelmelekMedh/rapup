@@ -12,7 +12,6 @@ class ProfileApi {
       },
       body: jsonEncode(<String, String>{
         'userId': userId,
-        'createdAt': createdAt.toIso8601String(),
       }),
     );
   }
@@ -28,7 +27,6 @@ class ProfileApi {
     if (response.statusCode == 200) {
       return ProfileModel.fromJson(jsonDecode(response.body));
     }
-
     return null; // 404 or error
   }
 }
