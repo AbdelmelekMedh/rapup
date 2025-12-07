@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapup/api/profile_api.dart';
+import 'package:rapup/models/profile_model.dart';
 import 'package:rapup/pages/profile.dart';
 import 'package:rapup/widgets/app_bar.dart';
 import 'package:rapup/widgets/gradient_container.dart';
@@ -36,9 +38,9 @@ class _EditProfileState extends State<EditProfile> {
       _addressController.text = profile.address ?? '';
       _phoneNumberController.text = profile.phoneNumber ?? '';
       _bioController.text = profile.bio ?? '';
-      /*_socialLinksController.text = profile.socialLinks.links.entries
+      _socialLinksController.text = profile.socialLinks!.links.entries
           .map((e) => '${e.key}:${e.value}')
-          .join(', ') ?? '';*/
+          .join(', ') ?? '';
 
       _interestsController.text = profile.interests != null
           ? profile.interests.join(', ')
@@ -98,7 +100,34 @@ class _EditProfileState extends State<EditProfile> {
             FontAwesomeIcons.check,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: () {
+            final updatedProfile = ProfileModel(
+              userId: profile!.userId,
+              name: _fullNameController.text,
+              address: _addressController.text,
+              phoneNumber: _phoneNumberController.text,
+              bio: _bioController.text,
+              gender: _selectedGender.toString(),
+              dateOfBirth: _selectedDate,
+              socialLinks: null, // or parse from text
+              interests: _interestsController.text.split(',').map((e) => e.trim()).toList(),
+              languages: _languagesController.text.split(',').map((e) => e.trim()).toList(),
+              imageProfile: null,
+              id: profile.id,
+              createdAt: profile.createdAt,
+              updatedAt: DateTime.now(),
+              active: false,
+            );
+
+            // 1) Update
+            ProfileApi.updateProfile(widget.userProfile.details.token, profile.userId, updatedProfile);
+
+            // 2) Re-fetch updated profile
+            final refreshed = ProfileApi.getProfile(widget.userProfile.details.token, profile.userId,);
+
+            // 3) Send refreshed data back to previous screen
+            Navigator.pop(context, refreshed);
+          },
         ),
       ),
       body: Stack(
@@ -117,7 +146,7 @@ class _EditProfileState extends State<EditProfile> {
                         CircleAvatar(
                           radius: 80,
                           backgroundImage: NetworkImage(
-                              profile?.imageProfile.filePathUrl ?? 'https://via.placeholder.com/150'),
+                              profile!.imageProfile!.filePathUrl ?? 'https://via.placeholder.com/150'),
                         ),
                         Positioned(
                           bottom: 0,

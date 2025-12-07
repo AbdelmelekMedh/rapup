@@ -29,4 +29,19 @@ class ProfileApi {
     }
     return null; // 404 or error
   }
+
+  static Future<http.Response> updateProfile(
+      String token,
+      String userId,
+      ProfileModel profile,
+      ) {
+    return http.put(
+      Uri.parse("http://10.0.2.2:8080/api/profile/$userId"),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode(profile.toJson()),
+    );
+  }
 }
